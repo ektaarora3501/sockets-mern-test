@@ -1,6 +1,5 @@
 var express = require("express");
 var app = express();
-const httpServer = require("http").Server(app);
 const cors = require("cors");
 const socketIo = require("socket.io");
 
@@ -12,12 +11,16 @@ app.use("/routes", require("./routes/index"));
 
 const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server is started on port :${port}`);
 });
 
-const io = socketIo(httpServer, {
+const io = socketIo(server, {
   cors: {
     origin: "*",
   },
 });
+
+app.set("socketIo", io);
+
+module.exports = app;
